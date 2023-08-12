@@ -29,10 +29,20 @@ jobs:
           black .
           isort .
 
-      - name: Commit changes
+      - name: Check for changes
+        run: |
+          if git diff --exit-code; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+      - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
+      - name: Commit changes
+        run: |
           git add -A
           git commit -m "Auto-format code using black and isort"
           git push https://github.com/Shivesh777/coding.git HEAD:${{ github.ref }} --follow-tags
