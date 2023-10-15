@@ -1,21 +1,26 @@
-import subprocess
 import re
+import subprocess
 from urllib.request import urlopen
+
 from bs4 import BeautifulSoup
 
 # Define the text containing chemical reactions
 text = "vinylacetyl-CoA = (E)-but-2-enoyl-CoA"
 
+
 # Use ChemSpot to extract chemical entities
 def extract_chemical_entities(text):
     # Run ChemSpot on the input text
     cmd = f'echo "{text}" | java -jar chemspot.jar --web'
-    result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    result = subprocess.run(
+        cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
     chemspot_output = result.stdout
 
     # Parse the ChemSpot output to extract recognized chemical entities
-    entities = re.findall(r'\[.*?\]', chemspot_output)
+    entities = re.findall(r"\[.*?\]", chemspot_output)
     return entities
+
 
 # Use PubChem to retrieve SMILES notation for chemical entities
 def get_smiles_from_pubchem(entity):
@@ -25,7 +30,7 @@ def get_smiles_from_pubchem(entity):
         # Retrieve the PubChem page and parse it
         with urlopen(pubchem_url) as response:
             pubchem_page = response.read()
-            soup = BeautifulSoup(pubchem_page, 'html.parser')
+            soup = BeautifulSoup(pubchem_page, "html.parser")
 
             # Find the SMILES notation on the page
             smiles_tag = soup.find("div", {"class": "smiles"})
@@ -34,6 +39,7 @@ def get_smiles_from_pubchem(entity):
     except Exception as e:
         print(f"Error: {str(e)}")
     return None
+
 
 # Extract chemical entities from the text
 chemical_entities = extract_chemical_entities(text)
