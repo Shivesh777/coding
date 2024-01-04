@@ -4,6 +4,7 @@
 
 # Follow-up: Can you come up with an algorithm that is less than O(n^2) time complexity?
 
+
 def two_sum(nums: list[int], target: int) -> list[int]:
     """
     Find indices of two numbers in an array that sum up to the target.
@@ -34,7 +35,7 @@ def two_sum(nums: list[int], target: int) -> list[int]:
             return [seen[diff], i]
         else:
             seen[nums[i]] = i
-            
+
 
 def two_sum_brute(nums: list[int], target: int) -> list[int]:
     """
